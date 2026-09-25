@@ -66,6 +66,10 @@ COPY package*.json ./
 # Install production dependencies only
 RUN npm ci --omit=dev && npm cache clean --force
 
+# Apply whatsapp-web.js 1.34.7 media compatibility patch
+COPY scripts/patch-whatsapp-webjs.js ./scripts/patch-whatsapp-webjs.js
+RUN node ./scripts/patch-whatsapp-webjs.js
+
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
 

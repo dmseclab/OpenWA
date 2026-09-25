@@ -271,7 +271,16 @@ export class WhatsAppWebJsAdapter extends EventEmitter implements IWhatsAppEngin
 
   async sendTextMessage(chatId: string, text: string): Promise<MessageResult> {
     this.ensureReady();
+
     const msg = await this.client!.sendMessage(chatId, text);
+
+    if (!msg?.id) {
+      return {
+        id: '',
+        timestamp: Math.floor(Date.now() / 1000),
+      };
+    }
+
     return {
       id: msg.id._serialized,
       timestamp: msg.timestamp,
@@ -315,6 +324,13 @@ export class WhatsAppWebJsAdapter extends EventEmitter implements IWhatsAppEngin
     const msg = await this.client!.sendMessage(chatId, messageMedia, {
       caption: media.caption,
     });
+
+    if (!msg?.id) {
+      return {
+        id: '',
+        timestamp: Math.floor(Date.now() / 1000),
+      };
+    }
 
     return {
       id: msg.id._serialized,
